@@ -8,9 +8,10 @@ RUN yarn install --frozen-lockfile && yarn cache clean
 
 COPY . .
 
+RUN npx prisma generate
+
 RUN yarn build
 
-RUN npx prisma generate
 
 EXPOSE 3000
 
