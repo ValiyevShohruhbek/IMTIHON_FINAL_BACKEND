@@ -22,7 +22,6 @@ import { Request, Response } from 'express';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RoleGuard } from 'src/common/guards/role.guard';
-import { UpdateChannelDto } from '../channel/dto/update-channel.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 
 @Controller('video')
@@ -69,8 +68,11 @@ export class VideosController {
   ) {
     const param = id;
     const contentRange = req.headers.range;
+    const userId = req['user']['id'];
+
     // console.log(contentRange);
     return await this.videosService.watchVideo(
+      userId,
       param,
       quality,
       contentRange as string,

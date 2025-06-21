@@ -72,7 +72,13 @@ export class VideosService {
     }
   }
 
-  async watchVideo(id: string, quality: string, range: string, res: Response) {
+  async watchVideo(
+    userId: string,
+    id: string,
+    quality: string,
+    range: string,
+    res: Response,
+  ) {
     const fileName = id;
     const baseQuality = `${quality}p.mp4`;
     const basePath = path.join(process.cwd(), 'uploads', 'videos');
@@ -83,6 +89,23 @@ export class VideosService {
     const innerVideoDir = fs.readdirSync(path.join(basePath, fileName));
     if (!innerVideoDir.includes(baseQuality))
       throw new NotFoundException('video quality not found');
+
+    const checkVideo = await this.prismaService.video.findFirst({
+      where: { videoUrl: `${id}.MOV` },
+    });
+
+    // Shu yerni .MOV ni togirlash kerak
+
+    if (!checkVideo) throw new NotFoundException('Video not found');
+    const result = await this.prismaService.watchHistory.create({
+      data: { videoId: checkVideo.id, watchTime: 342321, userId },
+    });
+
+    await this.prismaService.video.update({
+      where: { id: checkVideo.id },
+      data: { viewsCount: +1 },
+    });
+
     const { size } = fs.statSync(videoActivePath);
     const { start, end } = this.videoService.getChunkProps(range, size);
     if (!range) {

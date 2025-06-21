@@ -7,11 +7,20 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { ChannelModule } from './modules/channel/channel.module';
 import { VideosModule } from './modules/videos/videos.module';
 import { CommentsModule } from './modules/comments/comments.module';
-import { LikesModule } from './modules/likes/likes.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { PlaylistsModule } from './modules/playlists/playlists.module';
 
 @Module({
-  imports: [CoreModule, AuthModule, UsersModule, VideosModule, ChannelModule, CommentsModule, LikesModule, AdminModule],
+  imports: [
+    CoreModule,
+    AuthModule,
+    UsersModule,
+    VideosModule,
+    ChannelModule,
+    CommentsModule,
+    AdminModule,
+    PlaylistsModule,
+  ],
   controllers: [],
   providers: [{ provide: APP_INTERCEPTOR, useClass: TransformInterceptor }],
 })

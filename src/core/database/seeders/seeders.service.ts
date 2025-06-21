@@ -17,11 +17,15 @@ export class SeedersService implements OnModuleInit {
   }
   async createSuperadmin() {
     const phoneNumber = this.configService.get('SUPERADMIN_PHONENUMBER');
-    const checkSuperadmin = await this.userService.findPhoneNumber(phoneNumber);
-
-    if (checkSuperadmin) return this.logger.log('SuperAdmin yaratilgan');
-
     const email = this.configService.get('SUPERADMIN_EMAIL');
+    const checkSuperadmin = await this.userService.findPhoneNumber(phoneNumber);
+    const checkEmail = await this.prismaServise.user.findFirst({
+      where: { email },
+    });
+
+    if (checkSuperadmin || checkEmail)
+      return this.logger.log('SuperAdmin yaratilgan');
+
     const firstName = this.configService.get('SUPERADMIN_FIRSTNAME');
     const lastName = this.configService.get('SUPERADMIN_LASTNAME');
     const password = this.configService.get('SUPERADMIN_PASSWORD');
