@@ -12,6 +12,5 @@ RUN yarn build
 
 RUN npx prisma generate
 
-
 EXPOSE 3000
 
