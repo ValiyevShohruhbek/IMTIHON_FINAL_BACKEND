@@ -1,6 +1,5 @@
 name: Deploy to Server
 
-
 on:
   push:
     branches: [ main ]
@@ -27,8 +26,23 @@ jobs:
     - name: Deploy via SSH
       run: |
         ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ubuntu@44.210.136.208 << 'EOF'
+        # Loyiha papkasiga o'tish
         cd /home/ubuntu/my_exam
+        
+        # Git pull
         git pull origin main
-        docker-compose down
+        
+        # .env faylini yaratish (agar yo'q bo'lsa)
+        if [ ! -f ".env" ]; then
+          echo "Creating .env file..."
+          echo "NODE_ENV=production" > .env
+          echo "PORT=3000" >> .env
+          echo "DATABASE_URL=postgresql://user:password@localhost:5432/imtihon_db" >> .env
+          echo "JWT_SECRET=your_very_secure_jwt_secret_key_here" >> .env
+          echo "CORS_ORIGIN=*" >> .env
+        fi
+        
+        # Docker containers ni qayta ishga tushirish
+        docker-compose down || true
         docker-compose up --build -d
         EOF
