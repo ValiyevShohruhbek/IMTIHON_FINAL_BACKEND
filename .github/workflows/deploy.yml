@@ -19,9 +19,13 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         
+    - name: Test SSH Connection
+      run: |
+        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ubuntu@44.210.136.208 'echo "SSH connection successful"'
+        
     - name: Deploy via SSH
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@44.218.136.208 << 'EOF'
+        ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ubuntu@44.210.136.208 << 'EOF'
         cd /home/ubuntu/app
         git pull origin main
         docker-compose down
